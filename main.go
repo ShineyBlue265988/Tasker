@@ -59,6 +59,16 @@ func filterTasks(cursor interface{}) ([]*Task, error) {
 	}
 	return tasks, nil
 }
+func completeTask(text string) error {
+	filter := bson.D{primitive.E{Key: "text", Value: text}}
+
+	update := bson.D{primitive.E{Key: "$set", Value: bson.D{
+		primitive.E{Key: "completed", Value: true},
+	}}}
+
+	t := &Task{}
+	return collection.FindOneAndUpdate(CTX, filter, update).Decode(t)
+}
 func printTasks(tasks []*Task) {
 	for i, v := range tasks {
 		if v.Completed {
@@ -124,6 +134,15 @@ func main() {
 
 					printTasks(tasks)
 					return nil
+				},
+			},
+			{
+				Name:    "done",
+				Aliases: []string{"d"},
+				Usage:   "complete a task on the list",
+				Action: func(c *cli.Context) error {
+					text := c.Args().First()
+					return completeTask(text)
 				},
 			},
 		},
