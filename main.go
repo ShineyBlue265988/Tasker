@@ -1,12 +1,13 @@
-package make
+package main
 
 import (
 	"context"
+	"log"
+	"os"
+
 	"github.com/urfave/cli/v2"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
-	"os"
 )
 
 var collection *mongo.Collection
@@ -27,12 +28,11 @@ func init() {
 
 func main() {
 	app := &cli.App{
-		Name:  "tasker",
-		Usage: "Simple CLI program to manage your task.",
-		Commands: []*cli.Command{
-			{},
-		},
+		Name:     "tasker",
+		Usage:    "A simple CLI program to manage your tasks",
+		Commands: []*cli.Command{},
 	}
+
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
