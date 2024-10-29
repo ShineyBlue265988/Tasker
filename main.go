@@ -87,6 +87,21 @@ func getFinished() ([]*Task, error) {
 	return filterTasks(filter)
 }
 
+func deleteTask(text string) error {
+	filter := bson.D{primitive.E{Key: "text", Value: text}}
+
+	res, err := collection.DeleteOne(CTX, filter)
+	if err != nil {
+		return err
+	}
+
+	if res.DeletedCount == 0 {
+		return errors.New("No tasks were deleted")
+	}
+
+	return nil
+}
+
 func printTasks(tasks []*Task) {
 	for i, v := range tasks {
 		if v.Completed {
@@ -193,6 +208,19 @@ func main() {
 					}
 
 					printTasks(tasks)
+					return nil
+				},
+			},
+			{
+				Name:  "rm",
+				Usage: "deletes a task on the list",
+				Action: func(c *cli.Context) error {
+					text := c.Args().First()
+					err := deleteTask(text)
+					if err != nil {
+						return err
+					}
+
 					return nil
 				},
 			},
