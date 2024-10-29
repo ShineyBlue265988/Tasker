@@ -24,3 +24,17 @@ func init() {
 	collection = client.Database("tasker").Collection("task")
 
 }
+
+func main() {
+	app := &cli.App{
+		Name:  "tasker",
+		Usage: "Simple CLI program to manage your task.",
+		Commands: []*cli.Command{
+			{},
+		},
+	}
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
